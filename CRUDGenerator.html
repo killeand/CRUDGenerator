@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>React Standalone Template</title>
+        <meta charset="UTF-8" />
+
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-icons/font/bootstrap-icons.css" />
+        <style media="all">
+            
+        </style>
+
+        <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+        <script crossorigin src="https://unpkg.com/@popperjs/core/dist/umd/popper.min.js"></script>
+        <script crossorigin src="https://unpkg.com/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-bootstrap/dist/react-bootstrap.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds/src-min-noconflict/ace.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds/src-min-noconflict/mode-sql.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds/src-min-noconflict/mode-sqlserver.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds/src-min-noconflict/mode-mysql.js"></script>
+        <script crossorigin src="https://unpkg.com/ace-builds/src-min-noconflict/theme-monokai.js"></script>
+        <script crossorigin src="https://unpkg.com/react-ace/dist/react-ace.min.js"></script>
+        <script type="text/babel" data-presets="react">
+            const { Component, Fragment } = React;
+            const { Navbar, Nav, Container, Spinner } = ReactBootstrap;
+            const { HashRouter, Switch, Route, Link } = ReactRouterDOM;
+            const VERSION = "v1.0";
+
+            class Application extends Component {
+                constructor(props) {
+                    super(props);
+
+                    this.state = {
+                        version: ""
+                    }
+                }
+
+                componentDidMount() {
+                    fetch(`https://api.github.com/repos/killeand/CRUDGenerator/releases/latest`, {headers:{"accept":"application/vnd.github.v3+json"}}).then((result) => {
+                        return result.json();
+                    }).then((data) => {
+                        if (data) {
+                            if (data.tag_name) {
+                                this.setState({version:data.tag_name});
+                            }
+                            else {
+                                this.setState({version:"error"});
+                            }
+                        }
+                        else {
+                            this.setState({version:"error"});
+                        }
+                    });
+                }
+
+                RenderVersion() {
+                    if (this.state.version.length != 0) {
+                        if (this.state.version == "error") {
+                            return (<span className="text-danger">Error checking version online</span>);
+                        }
+                        else {
+                            if (this.state.version == VERSION) {
+                                return (<span className="text-success">Up to date!</span>);
+                            }
+                            else {
+                                return (<span className="text-danger">Out of date! {this.state.version} on GitHub.</span>);
+                            }
+                        }
+                    }
+                }
+
+                render() {
+                    return (
+                        <HashRouter>
+                            <header>
+                                <Navbar bg="light" variant="light">
+                                    <Navbar.Brand as={Link} to="/">
+                                        <span className="bi-gear-wide-connected"></span> CRUD Generator
+                                    </Navbar.Brand>
+                                    <Nav>
+                                        <Nav.Link as={Link} to="/">Home</Nav.Link>
+                                    </Nav>
+                                    <Navbar.Collapse className="justify-content-end">
+                                        <Navbar.Text>Version: {VERSION} ({this.RenderVersion()})</Navbar.Text>
+                                    </Navbar.Collapse>
+                                </Navbar>
+                            </header>
+                            <main className="bg-light text-dark m-3 p-2 border rounded-sm">
+                                <Switch>
+                                    <Route exact path="/" component={HomePage} />
+                                    <Route component={FourOhFour} />
+                                </Switch>
+                            </main>
+                            <footer className="bg-light text-dark my-3 mx-5 p-2 border rounded-sm text-center">
+                                Code is open source, do with it as you will. Just give credit where credit is due.<br />
+                                Powered by: <a href="https://getbootstrap.com/" className="bi-bootstrap" target="_blank">&nbsp;Bootstrap</a>, <a href="https://babeljs.io/" target="_blank">Babel</a>, <a href="https://reactjs.org/" target="_blank">React</a>, <a href="https://reactrouter.com/" target="_blank">React Router</a>, <a href="https://jquery.com/" target="_blank">JQuery</a>, <a href="https://popper.js.org/" target="_blank">PopperJS</a>, <a href="https://react-bootstrap.github.io/" target="_blank">React Bootstrap</a>, and <a href="https://ace.c9.io/" target="_blank">Ace Editor</a>/<a href="https://github.com/securingsincity/react-ace" target="_blank">React Ace</a>.<br />
+                                <a href="https://github.com/killeand/CRUDGenerator" className="bi-github" target="_blank">&nbsp;See Project on GitHub.com</a>
+                            </footer>
+                        </HashRouter>
+                    );
+                }
+            }
+
+            class HomePage extends Component {
+                render() {
+                    return (
+                        <>
+                            <p>Home Page</p>
+                        </>
+                    );
+                }
+            }
+
+            class FourOhFour extends Component {
+                render() {
+                    return (
+                        <>
+                            <p>Page does not exist</p>
+                        </>
+                    );
+                }
+            }
+        </script>
+    </head>
+    <body class="bg-dark">
+        <script type="text/babel">
+            ReactDOM.render(<Application />, $("body")[0]);
+        </script>
+    </body>
+</html>
