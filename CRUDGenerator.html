@@ -19,6 +19,15 @@
                 display: flex;
                 justify-content: center;
             }
+
+            .db-title {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                color: #FFFFFF;
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
         </style>
 
         <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -46,93 +55,98 @@
                 SchemaSeperator: "."
             }
 
-            var TempEntities = [
-                {
-                    Name: "users",
-                    Columns: [
-                        {
-                            Name: "userid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        }
-                    ]
-                },
-                {
-                    Name: "content",
-                    Columns: [
-                        {
-                            Name: "contentid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "userid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        }
-                    ]
-                },
-                {
-                    Name: "blah",
-                    Columns: [
-                        {
-                            Name: "contentid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "userid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "blahid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        }
-                    ]
-                },
-                {
-                    Name: "free",
-                    Columns: [
-                        {
-                            Name: "contentid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "userid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        }
-                    ]
-                },
-                {
-                    Name: "squee",
-                    Columns: [
-                        {
-                            Name: "contentid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "userid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "greatid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        },
-                        {
-                            Name: "sighid",
-                            Type: "INT(11)",
-                            Flags: "Blah"
-                        }
-                    ]
-                }
-            ];
+            var DatabaseDesign = {
+                Name: "ContentManagement",
+                Entities: [
+                    {
+                        Name: "users",
+                        Columns: [
+                            {
+                                Name: "userid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            }
+                        ]
+                    },
+                    {
+                        Name: "content",
+                        Columns: [
+                            {
+                                Name: "contentid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "userid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            }
+                        ]
+                    },
+                    {
+                        Name: "blah",
+                        Columns: [
+                            {
+                                Name: "contentid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "userid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "blahid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            }
+                        ]
+                    },
+                    {
+                        Name: "free",
+                        Columns: [
+                            {
+                                Name: "contentid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "userid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            }
+                        ]
+                    },
+                    {
+                        Name: "squee",
+                        Columns: [
+                            {
+                                Name: "contentid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "userid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "greatid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            },
+                            {
+                                Name: "sighid",
+                                Type: "INT(11)",
+                                Flags: "Blah"
+                            }
+                        ]
+                    }
+                ]
+            }
+            
+            
 
             class Application extends Component {
                 constructor(props) {
@@ -218,23 +232,23 @@
                     super(props);
 
                     this.state = {
-                        Entities: TempEntities
+                        Design: DatabaseDesign
                     }
                 }
 
                 RenderCards() {
-                    if (this.state.Entities.length == 0) {
+                    if (this.state.Design.Entities.length == 0) {
                         return (<p>There are no entities</p>);
                     }
                     else {
                         let rows = [];
 
-                        for (let i = 0; i < Math.ceil(this.state.Entities.length/4); i++) {
+                        for (let i = 0; i < Math.ceil(this.state.Design.Entities.length/4); i++) {
                             let newrow = [];
 
                             for (let j = 0; j < 4; j++) {
-                                if (this.state.Entities[(i*4)+j]) {
-                                    newrow.push(this.state.Entities[(i*4)+j]);
+                                if (this.state.Design.Entities[(i*4)+j]) {
+                                    newrow.push(this.state.Design.Entities[(i*4)+j]);
                                 }
                             }
 
@@ -295,10 +309,10 @@
                     return (
                         <>
                             <Container className="d-flex justify-content-end bg-secondary rounded-pill mb-3">
-                                <Button variant="danger" className="bi-x-square-fill m-2">&nbsp;Clear Entities</Button>
-                                <Button variant="success" className="bi-plus-square-fill m-2">&nbsp;Add Entity</Button>
+                                <div className="db-title">{this.state.Design.Name}</div>
+                                <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2">&nbsp;Clear Entities</Button>
+                                <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2">&nbsp;Add Entity</Button>
                             </Container>
-                            
                             <Container>
                                 {this.RenderCards()}
                             </Container>
