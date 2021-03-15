@@ -41,6 +41,99 @@
             const { HashRouter, Switch, Route, Link } = ReactRouterDOM;
             const VERSION = "v1.0";
 
+            var AppSettings = {
+                Schema: "dbo",
+                SchemaSeperator: "."
+            }
+
+            var TempEntities = [
+                {
+                    Name: "users",
+                    Columns: [
+                        {
+                            Name: "userid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        }
+                    ]
+                },
+                {
+                    Name: "content",
+                    Columns: [
+                        {
+                            Name: "contentid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "userid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        }
+                    ]
+                },
+                {
+                    Name: "blah",
+                    Columns: [
+                        {
+                            Name: "contentid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "userid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "blahid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        }
+                    ]
+                },
+                {
+                    Name: "free",
+                    Columns: [
+                        {
+                            Name: "contentid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "userid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        }
+                    ]
+                },
+                {
+                    Name: "squee",
+                    Columns: [
+                        {
+                            Name: "contentid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "userid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "greatid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        },
+                        {
+                            Name: "sighid",
+                            Type: "INT(11)",
+                            Flags: "Blah"
+                        }
+                    ]
+                }
+            ];
+
             class Application extends Component {
                 constructor(props) {
                     super(props);
@@ -121,6 +214,83 @@
             }
 
             class ModelDesigner extends Component {
+                constructor(props) {
+                    super(props);
+
+                    this.state = {
+                        Entities: TempEntities
+                    }
+                }
+
+                RenderCards() {
+                    if (this.state.Entities.length == 0) {
+                        return (<p>There are no entities</p>);
+                    }
+                    else {
+                        let rows = [];
+
+                        for (let i = 0; i < Math.ceil(this.state.Entities.length/4); i++) {
+                            let newrow = [];
+
+                            for (let j = 0; j < 4; j++) {
+                                if (this.state.Entities[(i*4)+j]) {
+                                    newrow.push(this.state.Entities[(i*4)+j]);
+                                }
+                            }
+
+                            rows.push(newrow);
+                        }
+
+                        return rows.map((row, index) => {
+                            return (
+                                <Row key={index} className="entity-row">
+                                    {this.RenderRow(row)}
+                                </Row>
+                            );
+                        });
+                    }
+                }
+
+                RenderRow(data) {
+                    return data.map((entity, index) => {
+                        return (
+                            <Card key={index} className="w-25 d-flex align-self-start">
+                                <Card.Header className="bg-secondary text-light font-weight-bold">{AppSettings.Schema + AppSettings.SchemaSeperator + entity.Name}</Card.Header>
+                                <ButtonGroup>
+                                    <Button variant="success" className="bi-plus-square-fill rounded-0" />
+                                    <Button variant="danger" className="bi-x-square-fill rounded-0" />
+                                </ButtonGroup>
+                                <Table striped bordered hover responsive variant="dark" className="m-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Column</th>
+                                            <th>Type</th>
+                                            <th>Flags</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.RenderColumns(entity.Columns)}
+                                    </tbody>
+                                </Table>
+                            </Card>
+                        );
+                    });
+                }
+
+                RenderColumns(data) {
+                    return data.map((column, index) => {
+                        return (
+                            <tr>
+                                <td>{column.Name}</td>
+                                <td>{column.Type}</td>
+                                <td>{column.Flags}</td>
+                                <td><Button variant="danger" className="bi-x-square-fill" /></td>
+                            </tr>
+                        );
+                    });
+                }
+
                 render() {
                     return (
                         <>
@@ -128,160 +298,9 @@
                                 <Button variant="danger" className="bi-x-square-fill m-2">&nbsp;Clear Entities</Button>
                                 <Button variant="success" className="bi-plus-square-fill m-2">&nbsp;Add Entity</Button>
                             </Container>
+                            
                             <Container>
-                                <Row className="entity-row">
-                                    <Card className="w-25 d-flex align-self-start">
-                                        <Card.Header className="bg-secondary text-light font-weight-bold">dbo.user</Card.Header>
-                                        <ButtonGroup>
-                                            <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                                            <Button variant="danger" className="bi-x-square-fill rounded-0" />
-                                        </ButtonGroup>
-                                        <Table striped bordered hover responsive variant="dark" className="m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Column</th>
-                                                    <th>Type</th>
-                                                    <th>Flags</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>userid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                    <Card className="w-25 d-flex align-self-start">
-                                        <Card.Header className="bg-secondary text-light font-weight-bold">dbo.content</Card.Header>
-                                        <ButtonGroup>
-                                            <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                                            <Button variant="danger" className="bi-x-square-fill rounded-0" />
-                                        </ButtonGroup>
-                                        <Table striped bordered hover responsive variant="dark" className="m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Column</th>
-                                                    <th>Type</th>
-                                                    <th>Flags</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>contentid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>userid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                    <Card className="w-25 d-flex align-self-start">
-                                        <Card.Header className="bg-secondary text-light font-weight-bold">dbo.content</Card.Header>
-                                        <ButtonGroup>
-                                            <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                                            <Button variant="danger" className="bi-x-square-fill rounded-0" />
-                                        </ButtonGroup>
-                                        <Table striped bordered hover responsive variant="dark" className="m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Column</th>
-                                                    <th>Type</th>
-                                                    <th>Flags</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>contentid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>userid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                    <Card className="w-25 d-flex align-self-start">
-                                        <Card.Header className="bg-secondary text-light font-weight-bold">dbo.content</Card.Header>
-                                        <ButtonGroup>
-                                            <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                                            <Button variant="danger" className="bi-x-square-fill rounded-0" />
-                                        </ButtonGroup>
-                                        <Table striped bordered hover responsive variant="dark" className="m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Column</th>
-                                                    <th>Type</th>
-                                                    <th>Flags</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>contentid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>userid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                </Row>
-                                <Row className="entity-row">
-                                    <Card className="w-25 d-flex align-self-start">
-                                        <Card.Header className="bg-secondary text-light font-weight-bold">dbo.content</Card.Header>
-                                        <ButtonGroup>
-                                            <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                                            <Button variant="danger" className="bi-x-square-fill rounded-0" />
-                                        </ButtonGroup>
-                                        <Table striped bordered hover responsive variant="dark" className="m-0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Column</th>
-                                                    <th>Type</th>
-                                                    <th>Flags</th>
-                                                    <th>&nbsp;</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>contentid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>userid</td>
-                                                    <td>INT(11)</td>
-                                                    <td>blah</td>
-                                                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </Card>
-                                </Row>
+                                {this.RenderCards()}
                             </Container>
                         </>
                     );
