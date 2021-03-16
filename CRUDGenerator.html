@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>React Standalone Template</title>
+        <title>CRUD Generator</title>
         <meta charset="UTF-8" />
 
         <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
@@ -50,103 +50,37 @@
             const { HashRouter, Switch, Route, Link } = ReactRouterDOM;
             const VERSION = "v1.0";
 
-            var AppSettings = {
-                Schema: "dbo",
-                SchemaSeperator: "."
+            const SETTINGS_TEMPLATE = {
+                Schema: "",
+                SchemaSeperator: ""
             }
 
-            var DatabaseDesign = {
-                Name: "ContentManagement",
-                Entities: [
-                    {
-                        Name: "users",
-                        Columns: [
-                            {
-                                Name: "userid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            }
-                        ]
-                    },
-                    {
-                        Name: "content",
-                        Columns: [
-                            {
-                                Name: "contentid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "userid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            }
-                        ]
-                    },
-                    {
-                        Name: "blah",
-                        Columns: [
-                            {
-                                Name: "contentid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "userid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "blahid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            }
-                        ]
-                    },
-                    {
-                        Name: "free",
-                        Columns: [
-                            {
-                                Name: "contentid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "userid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            }
-                        ]
-                    },
-                    {
-                        Name: "squee",
-                        Columns: [
-                            {
-                                Name: "contentid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "userid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "greatid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            },
-                            {
-                                Name: "sighid",
-                                Type: "INT(11)",
-                                Flags: "Blah"
-                            }
-                        ]
-                    }
-                ]
-            }
-            
-            
+            /*
+                SETTINGS OBJECT
+                {
+                    Schema: string
+                    SchemaSeperator: string
+                }
+            */
+
+            /*
+                DB OBJECT
+                {
+                    Name: string
+                    Entities: [
+                        {
+                            Name: string
+                            Columns: [
+                                {
+                                    Name: string
+                                    Type: string
+                                    Flags: null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            */
 
             class Application extends Component {
                 constructor(props) {
@@ -232,12 +166,24 @@
                     super(props);
 
                     this.state = {
-                        Design: DatabaseDesign
+                        Settings: JSON.parse(localStorage.getItem("CRUDGenerator.Settings")),
+                        Design: JSON.parse(localStorage.getItem("CRUDGenerator.Data"))
+                    }
+                }
+
+                componentDidMount() {
+                    if (this.state.Settings == null) {
+                        let NewSettings = {
+
+                        }
                     }
                 }
 
                 RenderCards() {
-                    if (this.state.Design.Entities.length == 0) {
+                    if (this.state.Design == null) {
+                        return (<p>There are no entities</p>);
+                    }
+                    else if (this.state.Design.Entities.length == 0) {
                         return (<p>There are no entities</p>);
                     }
                     else {
@@ -269,7 +215,7 @@
                     return data.map((entity, index) => {
                         return (
                             <Card key={index} className="w-25 d-flex align-self-start">
-                                <Card.Header className="bg-secondary text-light font-weight-bold">{AppSettings.Schema + AppSettings.SchemaSeperator + entity.Name}</Card.Header>
+                                <Card.Header className="bg-secondary text-light font-weight-bold">{this.state.Settings.Schema + this.state.Settings.SchemaSeperator + entity.Name}</Card.Header>
                                 <ButtonGroup>
                                     <Button variant="success" className="bi-plus-square-fill rounded-0" />
                                     <Button variant="danger" className="bi-x-square-fill rounded-0" />
@@ -309,7 +255,7 @@
                     return (
                         <>
                             <Container className="d-flex justify-content-end bg-secondary rounded-pill mb-3">
-                                <div className="db-title">{this.state.Design.Name}</div>
+                                <div className="db-title">{(this.state.Design)?(this.state.Design.Name)?this.state.Design.Name:"New Database":"New Database"}</div>
                                 <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2">&nbsp;Clear Entities</Button>
                                 <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2">&nbsp;Add Entity</Button>
                             </Container>
