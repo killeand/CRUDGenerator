@@ -1,0 +1,86 @@
+{
+  "name": "crudgenerator",
+  "version": "1.0.0",
+  "description": "Application to generate SQL code for CRUD operations in a Database",
+  "main": "./prod/electron.init.js",
+  "scripts": {
+    "run:dev": "npm run compile:dev && npm run electron:dev",
+    "run:prod": "npm run compile:prod && npm run electron:prod",
+    "compile:dev": "webpack --config ./webpack.dev.js && cp -f ./src/main.* ./dev/ && cp -f ./src/electron.init.js ./dev/electron.init.js",
+    "compile:prod": "webpack --config ./webpack.prod.js && cp -f ./src/main.* ./prod/ && cp -f ./src/electron.init.js ./prod/electron.init.js",
+    "electron:dev": "electron ./dev/electron.init.js",
+    "electron:prod": "electron ./prod/electron.init.js",
+    "electron:build": "electron-builder -wl"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/killeand/CRUDGenerator.git"
+  },
+  "keywords": [
+    "database",
+    "crud",
+    "react",
+    "html5"
+  ],
+  "author": {
+    "name": "Jason Johnston",
+    "email": "killean@shaw.ca"
+  },
+  "license": "CC-BY-4.0",
+  "bugs": {
+    "url": "https://github.com/killeand/CRUDGenerator/issues"
+  },
+  "homepage": "https://github.com/killeand/CRUDGenerator",
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.13.5",
+    "@babel/plugin-transform-react-jsx": "^7.12.17",
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "electron": "^12.0.1",
+    "electron-builder": "^22.10.5",
+    "webpack": "^5.26.3",
+    "webpack-cli": "^4.5.0"
+  },
+  "dependencies": {
+    "ace-builds": "^1.4.12",
+    "bootstrap": "^4.6.0",
+    "jquery": "^3.6.0",
+    "react": "^17.0.1",
+    "react-ace": "^9.3.0",
+    "react-bootstrap": "^1.5.2",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "build": {
+    "appId": "com.chosenatom.crudgenerator",
+    "productName": "CRUD Generator",
+    "directories": {
+      "output": "./bin/"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip",
+        "portable",
+        "msi"
+      ],
+      "icon": "./icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "pacman",
+        "zip",
+        "tar.gz"
+      ],
+      "icon": "./icon.ico",
+      "category": "Utility"
+    }
+  }
+}
