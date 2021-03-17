@@ -16,5 +16,5 @@ window.addEventListener("load", () => {
         DesignManager.Initialize();
     }
 
-    render(<Application />, $("body")[0]);
+    render(<Application />, $("#render-target")[0]);
 });

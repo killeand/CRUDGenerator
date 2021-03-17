@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Row, Card, ButtonGroup, Button, Table } from 'react-bootstrap';
 
+import InlineText from '../components/InlineText';
+
 import SettingsManager from '../scripts/SettingsManager';
 import DesignManager from '../scripts/DesignManager';
 
@@ -12,6 +14,36 @@ export default class ModelDesigner extends Component {
             Design: DesignManager.Get(),
             Settings: SettingsManager.Get()
         }
+    }
+
+    SaveDesign(jsondata) {
+        DesignManager.Save(jsondata);
+
+        this.setState({Design:jsondata});
+    }
+
+    UpdateDBName(value, object) {
+        let localData = this.state.Design;
+        localData.Name = value;
+
+        this.SaveDesign(localData);
+    }
+
+    UpdateEntityName(value, object) {
+        console.log(value, object);
+    }
+
+    ClickClear(e) {
+        let localData = DesignManager.DefaultStruct;
+
+        this.SaveDesign(localData);
+    }
+
+    ClickAddEntity(e) {
+        let localData = this.state.Design;
+        localData.Entities.push(DesignManager.DefaultEntity);
+
+        this.SaveDesign(localData);
     }
 
     RenderCards() {
@@ -47,7 +79,10 @@ export default class ModelDesigner extends Component {
         return data.map((entity, index) => {
             return (
                 <Card key={index} className="w-25 d-flex align-self-start">
-                    <Card.Header className="bg-secondary text-light font-weight-bold">{this.state.Settings.Schema + this.state.Settings.SchemaSeperator + entity.Name}</Card.Header>
+                    <Card.Header className="bg-secondary text-light font-weight-bold">
+                        {this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
+                        <InlineText text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this)} />
+                    </Card.Header>
                     <ButtonGroup>
                         <Button variant="success" className="bi-plus-square-fill rounded-0" />
                         <Button variant="danger" className="bi-x-square-fill rounded-0" />
@@ -87,9 +122,9 @@ export default class ModelDesigner extends Component {
         return (
             <>
                 <Container className="d-flex justify-content-end bg-secondary rounded-pill mb-3">
-                    <div className="db-title">{this.state.Design.Name}</div>
-                    <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2">&nbsp;Clear Entities</Button>
-                    <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2">&nbsp;Add Entity</Button>
+                    <InlineText className="db-title w-25 m-2" text={this.state.Design.Name} allowSpace={false} onSave={this.UpdateDBName.bind(this)} />
+                    <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2" onClick={this.ClickClear.bind(this)}>&nbsp;Clear Design</Button>
+                    <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2" onClick={this.ClickAddEntity.bind(this)}>&nbsp;Add Entity</Button>
                 </Container>
                 <Container>
                     {this.RenderCards()}

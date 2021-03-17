@@ -4,6 +4,7 @@
   "description": "Application to generate SQL code for CRUD operations in a Database",
   "main": "./prod/electron.init.js",
   "scripts": {
+    "watch": "cp -f ./src/main.* ./dev/ && webpack --config ./webpack.watch.js",
     "run:dev": "npm run compile:dev && npm run electron:dev",
     "run:prod": "npm run compile:prod && npm run electron:prod",
     "compile:dev": "webpack --config ./webpack.dev.js && cp -f ./src/main.* ./dev/ && cp -f ./src/electron.init.js ./dev/electron.init.js",

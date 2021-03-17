@@ -1,16 +1,16 @@
 export default class DesignManager {
     static DefaultStruct = {
-        Name: "New Database",
+        Name: "NewDatabase",
         Entities: []
     }
 
     static DefaultEntity = {
-        Name: "New Entity",
+        Name: "NewEntity",
         Columns: []
     }
 
     static DefaultColumn = {
-        Name: "New Column",
+        Name: "NewColumn",
         Type: -1,
         Flags: -1
     }
@@ -42,5 +42,9 @@ export default class DesignManager {
         else {
             return null;
         }
+    }
+
+    static Save(jsondata) {
+        localStorage.setItem("CRUDGenerator.Design", JSON.stringify(jsondata));
     }
 }

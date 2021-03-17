@@ -1,3 +1,9 @@
+.cc-icon {
+    height: 1rem;
+    margin-left: 3px;
+    vertical-align: top;
+}
+
 .entity-card {
     width: 49%;
     margin: 0px 0.5rem 0px 0.5rem;
