@@ -25,3 +25,12 @@
     font-weight: bold;
     font-size: 1.5rem;
 }
+
+.inline-text {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.inline-text:hover {
+    text-decoration: none;
+}

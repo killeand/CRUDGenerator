@@ -31,12 +31,12 @@ export default class InlineText extends Component {
         let newtext = this.state.text;
 
         if (this.state.editMode) {
-            if (this.props.onSave)
-                this.props.onSave(this.state.text, this);
-
             if (!this.props.allowSpace) {
                 newtext = newtext.replace(" ", "");
             }
+
+            if (this.props.onSave)
+                this.props.onSave(newtext);
         }
 
         this.setState({text: newtext, editMode: !this.state.editMode});
@@ -60,7 +60,7 @@ export default class InlineText extends Component {
         }   
         else {
             return (
-                <span className={this.props.className} onClick={this.EditClick.bind(this)}>{this.state.text}</span>
+                <span className={this.props.className + " inline-text"} onClick={this.EditClick.bind(this)}>{this.state.text}</span>
             );
         }
     }

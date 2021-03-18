@@ -29,8 +29,13 @@ export default class ModelDesigner extends Component {
         this.SaveDesign(localData);
     }
 
-    UpdateEntityName(value, object) {
-        console.log(value, object);
+    UpdateEntityName(index, value) {
+        let localData = this.state.Design;
+        localData.Entities[index].Name = value;
+
+        console.log(index, value);
+
+        this.SaveDesign(localData);
     }
 
     ClickClear(e) {
@@ -81,7 +86,7 @@ export default class ModelDesigner extends Component {
                 <Card key={index} className="w-25 d-flex align-self-start">
                     <Card.Header className="bg-secondary text-light font-weight-bold">
                         {this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
-                        <InlineText text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this)} />
+                        <InlineText key={index} text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this, index)} />
                     </Card.Header>
                     <ButtonGroup>
                         <Button variant="success" className="bi-plus-square-fill rounded-0" />
