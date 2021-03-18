@@ -85,7 +85,7 @@ export default class ModelDesigner extends Component {
             return (
                 <Card key={index} className="w-25 d-flex align-self-start">
                     <Card.Header className="bg-secondary text-light font-weight-bold">
-                        {this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
+                        {index + " - " + this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
                         <InlineText key={index} text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this, index)} />
                     </Card.Header>
                     <ButtonGroup>
