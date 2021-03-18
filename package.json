@@ -4,14 +4,9 @@
   "description": "Application to generate SQL code for CRUD operations in a Database",
   "main": "./prod/electron.init.js",
   "scripts": {
-    "watch": "cp -f ./src/main.* ./dev/ && webpack --config ./webpack.watch.js",
-    "run:dev": "npm run compile:dev && npm run electron:dev",
-    "run:prod": "npm run compile:prod && npm run electron:prod",
-    "compile:dev": "webpack --config ./webpack.dev.js && cp -f ./src/main.* ./dev/ && cp -f ./src/electron.init.js ./dev/electron.init.js",
-    "compile:prod": "webpack --config ./webpack.prod.js && cp -f ./src/main.* ./prod/ && cp -f ./src/electron.init.js ./prod/electron.init.js",
-    "electron:dev": "electron ./dev/electron.init.js",
-    "electron:prod": "electron ./prod/electron.init.js",
-    "electron:build": "electron-builder -wl"
+    "watch": "parcel watch ./src/main.html --public-url ./ -d ./dev",
+    "electron": "parcel build ./src/main.html --public-url ./ -d ./eldev && cp -f ./electron/electron.init.js ./eldev/electron.init.js && electron ./eldev/electron.init.js",
+    "build": "parcel build ./src/main.html --public-url ./ -d ./prod && cp -f ./electron/electron.init.js ./prod/electron.init.js && electron-builder -wl"
   },
   "repository": {
     "type": "git",
@@ -34,17 +29,12 @@
   "homepage": "https://github.com/killeand/CRUDGenerator",
   "devDependencies": {
     "@babel/core": "^7.13.10",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-proposal-decorators": "^7.13.5",
-    "@babel/plugin-transform-react-jsx": "^7.12.17",
     "@babel/plugin-transform-runtime": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
-    "babel-loader": "^8.2.2",
     "electron": "^12.0.1",
     "electron-builder": "^22.10.5",
-    "webpack": "^5.26.3",
-    "webpack-cli": "^4.5.0"
+    "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
     "ace-builds": "^1.4.12",
