@@ -21,6 +21,10 @@ export default class InlineText extends Component {
         if (prevState.text != this.props.text && !this.state.editMode) {
             this.setState({text:this.props.text});
         }
+
+        if (this.props.keyn) {
+            console.log(this.state, this.props);
+        }
     }
 
     TextChange(e) {

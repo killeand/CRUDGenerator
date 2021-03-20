@@ -16,81 +16,102 @@ export default class ModelDesigner extends Component {
         }
     }
 
-    SaveDesign(jsondata) {
-        DesignManager.Save(jsondata);
+    SaveDesign() {
+        DesignManager.Save(this.state.Design);
 
-        this.setState({Design:jsondata});
+        this.setState({Design:this.state.Design});
     }
 
-    UpdateDBName(value, object) {
-        let localData = this.state.Design;
-        localData.Name = value;
+    UpdateDBName(value) {
+        this.state.Design.Name = value;
 
-        this.SaveDesign(localData);
+        this.SaveDesign();
     }
 
-    UpdateEntityName(index, value) {
-        let localData = this.state.Design;
-        localData.Entities[index].Name = value;
+    UpdateEntityName(entityIndex, value) {
+        this.state.Design.Entities[entityIndex].Name = value;
 
-        console.log(index, value);
-
-        this.SaveDesign(localData);
+        this.SaveDesign();
     }
 
-    ClickClear(e) {
-        let localData = DesignManager.DefaultStruct;
+    UpdateColumnName(entityIndex, columnIndex, value) {
+        this.state.Design.Entities[entityIndex].Columns[columnIndex].Name = value;
 
-        this.SaveDesign(localData);
+        this.SaveDesign();
     }
 
-    ClickAddEntity(e) {
-        let localData = this.state.Design;
-        localData.Entities.push(DesignManager.DefaultEntity);
+    Clear() {
+        DesignManager.Initialize();
+    }
 
-        this.SaveDesign(localData);
+    AddEntity() {
+        this.state.Design.Entities.push(DesignManager.NewEntity());
+
+        this.SaveDesign();
+    }
+
+    AddColumn(entityIndex) {
+        this.state.Design.Entities[entityIndex].Columns.push(DesignManager.NewColumn());
+
+        this.SaveDesign();
+    }
+
+    RemoveEntity(entityIndex) {
+        this.state.Design.Entities.splice(entityIndex, 1);
+
+        this.SaveDesign();
+    }
+
+    RemoveColumn(entityIndex, columnIndex) {
+        this.state.Design.Entities[entityIndex].Columns.splice(columnIndex, 1);
+
+        this.SaveDesign();
     }
 
     RenderCards() {
-        if (this.state.Design.Entities.length == 0) {
-            return (<p>There are no entities</p>);
-        }
-        else {
-            let rows = [];
-
-            for (let i = 0; i < Math.ceil(this.state.Design.Entities.length/4); i++) {
-                let newrow = [];
-
-                for (let j = 0; j < 4; j++) {
-                    if (this.state.Design.Entities[(i*4)+j]) {
-                        newrow.push(this.state.Design.Entities[(i*4)+j]);
-                    }
-                }
-
-                rows.push(newrow);
+        if (this.state.Design.Entities) {
+            if (this.state.Design.Entities.length == 0) {
+                return (<p>There are no entities</p>);
             }
-
-            return rows.map((row, index) => {
-                return (
-                    <Row key={index} className="entity-row">
-                        {this.RenderRow(row)}
-                    </Row>
-                );
-            });
+            else {
+                let rows = [];
+    
+                for (let i = 0; i < Math.ceil(this.state.Design.Entities.length/4); i++) {
+                    let newrow = [];
+    
+                    for (let j = 0; j < 4; j++) {
+                        if (this.state.Design.Entities[(i*4)+j]) {
+                            newrow.push(this.state.Design.Entities[(i*4)+j]);
+                        }
+                    }
+    
+                    rows.push(newrow);
+                }
+    
+                return rows.map((row, index) => {
+                    return (
+                        <Row key={index} className="entity-row">
+                            {this.RenderRow(row, index)}
+                        </Row>
+                    );
+                });
+            }
         }
     }
 
-    RenderRow(data) {
+    RenderRow(data, rowNumber) {
         return data.map((entity, index) => {
+            let newindex = (rowNumber * 4) + index;
+
             return (
-                <Card key={index} className="w-25 d-flex align-self-start">
+                <Card key={newindex} className="w-25 d-flex align-self-start">
                     <Card.Header className="bg-secondary text-light font-weight-bold">
-                        {index + " - " + this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
-                        <InlineText key={index} text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this, index)} />
+                        {this.state.Settings.Schema + this.state.Settings.SchemaSeperator}
+                        <InlineText key={newindex} text={entity.Name} allowSpace={false} onSave={this.UpdateEntityName.bind(this, newindex)} />
                     </Card.Header>
                     <ButtonGroup>
-                        <Button variant="success" className="bi-plus-square-fill rounded-0" />
-                        <Button variant="danger" className="bi-x-square-fill rounded-0" />
+                        <Button variant="success" className="bi-plus-square-fill rounded-0" onClick={this.AddColumn.bind(this, newindex)} />
+                        <Button variant="danger" className="bi-x-square-fill rounded-0" onClick={this.RemoveEntity.bind(this, newindex)} />
                     </ButtonGroup>
                     <Table striped bordered hover responsive variant="dark" className="m-0">
                         <thead>
@@ -102,7 +123,7 @@ export default class ModelDesigner extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.RenderColumns(entity.Columns)}
+                            {this.RenderColumns(entity.Columns, newindex)}
                         </tbody>
                     </Table>
                 </Card>
@@ -110,14 +131,14 @@ export default class ModelDesigner extends Component {
         });
     }
 
-    RenderColumns(data) {
+    RenderColumns(data, entityIndex) {
         return data.map((column, index) => {
             return (
-                <tr>
-                    <td>{column.Name}</td>
+                <tr key={index}>
+                    <td><InlineText text={column.Name} allowSpace={false} onSave={this.UpdateColumnName.bind(this, entityIndex, index)} /></td>
                     <td>{column.Type}</td>
                     <td>{column.Flags}</td>
-                    <td><Button variant="danger" className="bi-x-square-fill" /></td>
+                    <td><Button variant="danger" className="bi-x-square-fill" onClick={this.RemoveColumn.bind(this, entityIndex, index)} /></td>
                 </tr>
             );
         });
@@ -128,8 +149,8 @@ export default class ModelDesigner extends Component {
             <>
                 <Container className="d-flex justify-content-end bg-secondary rounded-pill mb-3">
                     <InlineText className="db-title w-25 m-2" text={this.state.Design.Name} allowSpace={false} onSave={this.UpdateDBName.bind(this)} />
-                    <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2" onClick={this.ClickClear.bind(this)}>&nbsp;Clear Design</Button>
-                    <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2" onClick={this.ClickAddEntity.bind(this)}>&nbsp;Add Entity</Button>
+                    <Button variant="danger" className="d-flex align-items-center bi-x-square-fill m-2" onClick={this.Clear.bind(this)}>&nbsp;Clear Design</Button>
+                    <Button variant="success" className="d-flex align-items-center bi-plus-square-fill m-2" onClick={this.AddEntity.bind(this)}>&nbsp;Add Entity</Button>
                 </Container>
                 <Container>
                     {this.RenderCards()}

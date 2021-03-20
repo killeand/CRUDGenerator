@@ -1,18 +1,24 @@
 export default class DesignManager {
-    static DefaultStruct = {
-        Name: "NewDatabase",
-        Entities: []
+    static NewStruct() {
+        return {
+            Name: "NewDatabase",
+            Entities: []
+        };
     }
 
-    static DefaultEntity = {
-        Name: "NewEntity",
-        Columns: []
+    static NewEntity() {
+        return {
+            Name: "NewEntity",
+            Columns: []
+        };
     }
 
-    static DefaultColumn = {
-        Name: "NewColumn",
-        Type: -1,
-        Flags: -1
+    static NewColumn() {
+        return {
+            Name: "NewColumn",
+            Type: -1,
+            Flags: -1
+        };
     }
 
     static Check() {
@@ -28,7 +34,7 @@ export default class DesignManager {
     }
 
     static Initialize() {
-        let Init = this.DefaultStruct;
+        let Init = this.NewStruct();
 
         localStorage.setItem("CRUDGenerator.Design", JSON.stringify(Init));
 
